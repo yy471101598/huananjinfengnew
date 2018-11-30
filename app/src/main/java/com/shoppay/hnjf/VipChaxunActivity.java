@@ -89,6 +89,10 @@ public class VipChaxunActivity extends Activity {
     TextView vipTvGuoqitime;
     @Bind(R.id.vip_tv_xiaofei)
     TextView vipTvXiaofei;
+    @Bind(R.id.vip_tv_carcard)
+    TextView mVipTvCarcard;
+    @Bind(R.id.vip_tv_sfzcard)
+    TextView mVipTvSfzcard;
     private boolean isSuccess = false;
     private Activity ac;
     private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
@@ -111,6 +115,8 @@ public class VipChaxunActivity extends Activity {
                     vipTvState.setText(info.getState());
                     vipTvGuoqitime.setText(info.getPastTime());
                     vipTvXiaofei.setText(StringUtil.twoNum(info.getMemConsumeMoney()));
+                    mVipTvCarcard.setText(info.MemCarNumber);
+                    mVipTvSfzcard.setText(info.MemIdentityCard);
                     PreferenceHelper.write(ac, "shoppay", "memid", info.getMemID());
                     PreferenceHelper.write(ac, "shoppay", "vipcar", vipEtCard.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "Discount", info.getDiscount());
@@ -131,6 +137,8 @@ public class VipChaxunActivity extends Activity {
                     vipTvState.setText("");
                     vipTvGuoqitime.setText("");
                     vipTvXiaofei.setText("");
+                    mVipTvCarcard.setText("");
+                    mVipTvSfzcard.setText("");
                     isSuccess = false;
                     PreferenceHelper.write(ac, "shoppay", "memid", "123");
                     PreferenceHelper.write(ac, "shoppay", "vipcar", "123");
@@ -250,12 +258,9 @@ public class VipChaxunActivity extends Activity {
 
     @Override
     protected void onStop() {
-        try
-        {
+        try {
             new ReadCardOpt().overReadCard();
-        }
-        catch (RemoteException e)
-        {
+        } catch (RemoteException e) {
             e.printStackTrace();
         }
         super.onStop();

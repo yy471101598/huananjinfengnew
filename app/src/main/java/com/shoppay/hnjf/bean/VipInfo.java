@@ -42,7 +42,9 @@ public class VipInfo {
     private String MemConsumeMoney;
     private String ShopName;
     public String MemOilInfo;
-    public String MemCarNumber;
+    public String MemCarNumber;//车牌号
+    public String MemIdentityCard;//=身份证号
+    public String FirstRegistTime;//=首次登记时间
 
     public String getMemID() {
         return MemID;

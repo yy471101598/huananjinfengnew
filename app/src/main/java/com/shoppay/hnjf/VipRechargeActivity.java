@@ -111,6 +111,8 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
     private String orderAccount;
     private SystemQuanxian sysquanxian;
     private MyApplication app;
+    private RelativeLayout rl_yhqchose;
+    private TextView tv_yhqchose,tv_zsmoney;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -255,6 +257,9 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
         tv_vipyue = (TextView) findViewById(R.id.viprecharge_et_yue);
         tv_jifen = (TextView) findViewById(R.id.viprecharge_et_jifen);
         tv_dengji = (TextView) findViewById(R.id.viprecharge_et_dengji);
+        rl_yhqchose=findViewById(R.id.rl_yhqchose);
+        tv_yhqchose=findViewById(R.id.tv_yhq);
+        tv_zsmoney=findViewById(R.id.vip_tv_zsmoney);
         myGridViews = (MyGridViews) findViewById(R.id.gridview);
         mRadiogroup = (RadioGroup) findViewById(R.id.radiogroup);
         tv_title.setText("会员充值");

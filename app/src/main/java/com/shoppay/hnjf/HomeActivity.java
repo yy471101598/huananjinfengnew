@@ -180,10 +180,6 @@ public class HomeActivity extends Activity{
     }
     private void obtainHome() {
  list=new ArrayList<Home>();
-        Home jy=new Home();
-        jy.name="加油消费";
-        jy.iconId=R.mipmap.jiaoyouxiaofei;
-        list.add(jy);
         Home h1=new Home();
         h1.name="会员查询";
         h1.iconId=R.mipmap.vipchaxun;
@@ -196,14 +192,18 @@ public class HomeActivity extends Activity{
         h22.name="会员签到";
         h22.iconId=R.mipmap.vipqiandao;
         list.add(h22);
+        Home jy=new Home();
+        jy.name="加油消费";
+        jy.iconId=R.mipmap.jiaoyouxiaofei;
+        list.add(jy);
         Home h3=new Home();
         h3.name="商品消费";
         h3.iconId=R.mipmap.shopxiaofei;
         list.add(h3);
-        Home h7=new Home();
-        h7.name="快速消费";
-        h7.iconId=R.mipmap.fastxiaofei;
-        list.add(h7);
+//        Home h7=new Home();
+//        h7.name="快速消费";
+//        h7.iconId=R.mipmap.fastxiaofei;
+//        list.add(h7);
         Home h9=new Home();
         h9.name="计次消费";
         h9.iconId=R.mipmap.vipnumxiaofei;
