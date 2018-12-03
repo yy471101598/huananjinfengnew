@@ -111,15 +111,19 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
     private String orderAccount;
     private SystemQuanxian sysquanxian;
     private MyApplication app;
-    private RelativeLayout rl_yhqchose;
-    private TextView tv_yhqchose,tv_zsmoney;
+    private EditText et_zsmoney;
+    private TextView tv_allmoney;
+    private double rechargemoney=0.00;
+    private double zsmoney=0.00;
+    private double allmoney=0.00;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viprecharge);
         ac = this;
-        app= (MyApplication) getApplication();
-        sysquanxian=app.getSysquanxian();
+        app = (MyApplication) getApplication();
+        sysquanxian = app.getSysquanxian();
         dialog = DialogUtil.loadingDialog(VipRechargeActivity.this, 1);
         paydialog = DialogUtil.payloadingDialog(VipRechargeActivity.this, 1);
         PreferenceHelper.write(MyApplication.context, "shoppay", "viptoast", "未查询到会员");
@@ -189,6 +193,49 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
 //        IntentFilter intentFilter = new IntentFilter();
 //        intentFilter.addAction("com.example.communication.RECEIVER");
 //        registerReceiver(msgReceiver, intentFilter);
+        et_money.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable.toString().equals("")){
+                    rechargemoney=0.00;
+                }else{
+                    rechargemoney=Double.parseDouble(editable.toString());
+                }
+                tv_allmoney.setText(CommonUtils.add(rechargemoney,zsmoney)+"");
+
+            }
+        });
+        et_zsmoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable.toString().equals("")){
+                    zsmoney=0.00;
+                }else{
+                    zsmoney=Double.parseDouble(editable.toString());
+                }
+                tv_allmoney.setText(CommonUtils.add(rechargemoney,zsmoney)+"");
+            }
+        });
     }
 
     /**
@@ -257,9 +304,8 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
         tv_vipyue = (TextView) findViewById(R.id.viprecharge_et_yue);
         tv_jifen = (TextView) findViewById(R.id.viprecharge_et_jifen);
         tv_dengji = (TextView) findViewById(R.id.viprecharge_et_dengji);
-        rl_yhqchose=findViewById(R.id.rl_yhqchose);
-        tv_yhqchose=findViewById(R.id.tv_yhq);
-        tv_zsmoney=findViewById(R.id.vip_tv_zsmoney);
+        tv_allmoney = findViewById(R.id.vip_tv_allmoney);
+        et_zsmoney = findViewById(R.id.et_zsmoney);
         myGridViews = (MyGridViews) findViewById(R.id.gridview);
         mRadiogroup = (RadioGroup) findViewById(R.id.radiogroup);
         tv_title.setText("会员充值");
@@ -298,23 +344,23 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
                 } else {
                     if (isSuccess) {
                         if (CommonUtils.checkNet(getApplicationContext())) {
-                            if(isWx){
-                                if(sysquanxian.iswxpay==0){
+                            if (isWx) {
+                                if (sysquanxian.iswxpay == 0) {
                                     Intent mipca = new Intent(ac, MipcaActivityCapture.class);
-                                    mipca.putExtra("type","pay");
+                                    mipca.putExtra("type", "pay");
                                     startActivityForResult(mipca, 222);
-                                }else {
+                                } else {
                                     vipRecharge(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
                                 }
-                            }else if(isZhifubao){
-                                if(sysquanxian.iszfbpay==0){
+                            } else if (isZhifubao) {
+                                if (sysquanxian.iszfbpay == 0) {
                                     Intent mipca = new Intent(ac, MipcaActivityCapture.class);
-                                    mipca.putExtra("type","pay");
+                                    mipca.putExtra("type", "pay");
                                     startActivityForResult(mipca, 222);
-                                }else {
+                                } else {
                                     vipRecharge(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
                                 }
-                            }else {
+                            } else {
                                 vipRecharge(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
                             }
                         } else {
@@ -352,12 +398,12 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
         final PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
         client.setCookieStore(myCookieStore);
         RequestParams map = new RequestParams();
-        map.put("auth_code",codedata);
-        map.put("UserID", PreferenceHelper.readString(ac, "shoppay", "UserID",""));
+        map.put("auth_code", codedata);
+        map.put("UserID", PreferenceHelper.readString(ac, "shoppay", "UserID", ""));
 //        （1会员充值7商品消费9快速消费11会员充次）
-        map.put("ordertype",1);
-        orderAccount=DateUtils.getCurrentTime("yyyyMMddHHmmss");
-        map.put("account",orderAccount );
+        map.put("ordertype", 1);
+        orderAccount = DateUtils.getCurrentTime("yyyyMMddHHmmss");
+        map.put("account", orderAccount);
         map.put("money", et_money.getText().toString());
 //        0=现金 1=银联 2=微信 3=支付宝
         if (isMoney) {
@@ -369,7 +415,7 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
         } else {
             map.put("payType", 3);
         }
-        client.setTimeout(120*1000);
+        client.setTimeout(120 * 1000);
         LogUtils.d("xxparams", map.toString());
         String url = UrlTools.obtainUrl(ac, "?Source=3", "PayOnLine");
         LogUtils.d("xxurl", url);
@@ -452,6 +498,7 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
         } else {
             map.put("payType", 3);
         }
+        map.put("giveMoney",et_zsmoney.getText().toString());
 
         LogUtils.d("xxparams", map.toString());
         String url = UrlTools.obtainUrl(ac, "?Source=3", "MemRechargeMoney");
