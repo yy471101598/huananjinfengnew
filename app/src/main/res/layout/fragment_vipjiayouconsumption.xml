@@ -241,7 +241,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:textColor="@color/text_30"
-                android:text="加油类型"
+                android:text="身份证号"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 />

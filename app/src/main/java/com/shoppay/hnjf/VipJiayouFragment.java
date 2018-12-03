@@ -100,7 +100,7 @@ public class VipJiayouFragment extends Fragment {
                     tv_vipyue.setText(info.getMemMoney());
                     tv_vipdengji.setText(info.getLevelName());
                     tv_vipjf.setText(info.getMemPoint());
-                    tv_oiltype.setText(info.MemOilInfo);
+                    tv_oiltype.setText(info.MemIdentityCard);
                     tv_carcard.setText(info.MemCarNumber);
                     tv_vipcard.setText(info.getMemCard());
                     PreferenceHelper.write(getActivity(), "shoppay", "memid", info.getMemID());
@@ -743,7 +743,7 @@ public class VipJiayouFragment extends Fragment {
         params.put("UserPwd", password);
         params.put("OilID", oilmsg.getOilID());
         params.put("CouponID", yhqmsg.DetailID);
-        params.put("CouponMoney", yhqmsg.CouponMoney);
+        params.put("CouponMoney",  CommonUtils.del(Double.parseDouble(et_xfmoney.getText().toString()), Double.parseDouble(tv_sfmoney.getText().toString())));
         LogUtils.d("xxyh", new Gson().toJson(yhqmsg));
         LogUtils.d("xxparams", params.toString());
         String url = UrlTools.obtainUrl(getActivity(), "?Source=3", "OilExpense");
