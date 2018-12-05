@@ -71,6 +71,8 @@ public class NumConsumptionActivity extends Activity implements View.OnClickList
     private RelativeLayout rl_left, rl_jiesuan, rl_vipname;
     private EditText et_vipcard;
     private TextView tv_title, tv_num, tv_vipname;
+    TextView mVipTvCarcard;
+    TextView mVipTvSfzcard;
     private Activity ac;
     private ListView listView;
     private String editString;
@@ -98,6 +100,8 @@ public class NumConsumptionActivity extends Activity implements View.OnClickList
                     vipTvVipyue.setText(info.getMemMoney());
                     vipTvJifen.setText(info.getMemPoint());
                     vipTvVipdengji.setText(info.getLevelName());
+                    mVipTvCarcard.setText(info.MemCarNumber);
+                    mVipTvSfzcard.setText(info.MemIdentityCard);
                     PreferenceHelper.write(ac,"shoppay","memid",info.getMemID());
                     PreferenceHelper.write(ac, "shoppay", "vipcar",et_vipcard.getText().toString());
                     PreferenceHelper.write(ac,"shoppay","Discount",info.getDiscount());
@@ -112,6 +116,8 @@ public class NumConsumptionActivity extends Activity implements View.OnClickList
                     vipTvVipyue.setText("");
                     vipTvJifen.setText("");
                     vipTvVipdengji.setText("");
+                    mVipTvCarcard.setText("");
+                    mVipTvSfzcard.setText("");
                     listView.setVisibility(View.GONE);
                     break;
             }
@@ -271,7 +277,8 @@ public class NumConsumptionActivity extends Activity implements View.OnClickList
         vipTvVipdengji = (TextView) findViewById(R.id.vip_tv_vipdengji);
         vipTvVipyue = (TextView) findViewById(R.id.vip_tv_vipyue);
         vipTvJifen = (TextView) findViewById(R.id.vip_tv_jifen);
-
+        mVipTvCarcard=findViewById(R.id.vip_tv_carcard);
+        mVipTvSfzcard=findViewById(R.id.vip_tv_sfzcard);
         tv_vipname = (TextView) findViewById(R.id.num_tv_vipname);
         listView = (ListView) findViewById(R.id.num_listview);
         tv_title.setText("计次消费");

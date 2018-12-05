@@ -92,6 +92,10 @@ public class JifenChangeActivity extends Activity {
     EditText vipEtJifennum;
     @Bind(R.id.vip_rl_jiesuan)
     RelativeLayout vipRlJiesuan;
+    @Bind(R.id.vip_tv_carcard)
+    TextView mVipTvCarcard;
+    @Bind(R.id.vip_tv_sfzcard)
+    TextView mVipTvSfzcard;
     private boolean isSuccess = false;
     private boolean isadd=true;
     private Activity ac;
@@ -106,6 +110,8 @@ public class JifenChangeActivity extends Activity {
                     vipTvVipyue.setText(info.getMemMoney());
                     vipTvJifen.setText(info.getMemPoint());
                     vipTvVipdengji.setText(info.getLevelName());
+                    mVipTvCarcard.setText(info.MemCarNumber);
+                    mVipTvSfzcard.setText(info.MemIdentityCard);
                     PreferenceHelper.write(ac, "shoppay", "memid", info.getMemID());
                     PreferenceHelper.write(ac, "shoppay", "vipcar", vipEtCard.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "Discount", info.getDiscount());
@@ -118,6 +124,8 @@ public class JifenChangeActivity extends Activity {
                     vipTvVipdengji.setText("");
                     vipTvJifen.setText("");
                     vipTvVipyue.setText("");
+                    mVipTvCarcard.setText("");
+                    mVipTvSfzcard.setText("");
                     isSuccess = false;
                     PreferenceHelper.write(ac, "shoppay", "memid", "123");
                     PreferenceHelper.write(ac, "shoppay", "vipcar", "123");

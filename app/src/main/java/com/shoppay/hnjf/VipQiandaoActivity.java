@@ -84,6 +84,10 @@ public class VipQiandaoActivity extends Activity {
     TextView vipTvVipdengji;
     @Bind(R.id.listview)
     ListView listview;
+    @Bind(R.id.vip_tv_carcard)
+    TextView mVipTvCarcard;
+    @Bind(R.id.vip_tv_sfzcard)
+    TextView mVipTvSfzcard;
     private boolean isSuccess = false;
     private Activity ac;
     private List<VipQiandaoRecord> list;
@@ -100,6 +104,8 @@ public class VipQiandaoActivity extends Activity {
                     vipTvVipyue.setText(info.getMemMoney());
                     vipTvJifen.setText(info.getMemPoint());
                     vipTvVipdengji.setText(info.getLevelName());
+                    mVipTvCarcard.setText(info.MemCarNumber);
+                    mVipTvSfzcard.setText(info.MemIdentityCard);
                     PreferenceHelper.write(ac, "shoppay", "memid", info.getMemID());
                     PreferenceHelper.write(ac, "shoppay", "vipcar", vipEtCard.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "Discount", info.getDiscount());
@@ -114,6 +120,8 @@ public class VipQiandaoActivity extends Activity {
                     vipTvVipdengji.setText("");
                     vipTvJifen.setText("");
                     vipTvVipyue.setText("");
+                    mVipTvCarcard.setText("");
+                    mVipTvSfzcard.setText("");
                     isSuccess = false;
                     PreferenceHelper.write(ac, "shoppay", "memid", "123");
                     PreferenceHelper.write(ac, "shoppay", "vipcar", "123");

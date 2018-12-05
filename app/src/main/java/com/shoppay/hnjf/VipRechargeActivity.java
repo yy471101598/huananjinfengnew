@@ -65,6 +65,8 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
     private EditText et_vipcard, et_money;
     private TextView tv_title, tv_vipname, tv_vipyue, tv_jifen, tv_dengji;
     private MyGridViews myGridViews;
+    TextView mVipTvCarcard;
+    TextView mVipTvSfzcard;
     private Activity ac;
     private String state = "现金";
     private String editString;
@@ -87,6 +89,8 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
                     tv_vipyue.setText(info.getMemMoney());
                     tv_jifen.setText(info.getMemPoint());
                     tv_dengji.setText(info.getLevelName());
+                    mVipTvCarcard.setText(info.MemCarNumber);
+                    mVipTvSfzcard.setText(info.MemIdentityCard);
                     PreferenceHelper.write(ac, "shoppay", "memid", info.getMemID());
                     PreferenceHelper.write(ac, "shoppay", "vipcar", et_vipcard.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "Discount", info.getDiscount());
@@ -99,6 +103,8 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
                     tv_vipyue.setText("");
                     tv_jifen.setText("");
                     tv_dengji.setText("");
+                    mVipTvCarcard.setText("");
+                    mVipTvSfzcard.setText("");
                     isSuccess = false;
                     PreferenceHelper.write(ac, "shoppay", "memid", "123");
                     PreferenceHelper.write(ac, "shoppay", "vipcar", "123");
@@ -308,6 +314,9 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
         et_zsmoney = findViewById(R.id.et_zsmoney);
         myGridViews = (MyGridViews) findViewById(R.id.gridview);
         mRadiogroup = (RadioGroup) findViewById(R.id.radiogroup);
+
+         mVipTvCarcard=findViewById(R.id.vip_tv_carcard);
+         mVipTvSfzcard=findViewById(R.id.vip_tv_sfzcard);
         tv_title.setText("会员充值");
         rl_right = (RelativeLayout) findViewById(R.id.rl_right);
         rl_right.setOnClickListener(this);

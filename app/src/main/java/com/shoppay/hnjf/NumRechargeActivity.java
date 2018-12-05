@@ -69,17 +69,17 @@ import cz.msebera.android.httpclient.Header;
 import static com.shoppay.hnjf.MyApplication.context;
 
 /**
- *
  * @author qdwang
- *
  */
 public class NumRechargeActivity extends Activity implements
-        OnItemClickListener ,View.OnClickListener{
+        OnItemClickListener, View.OnClickListener {
 
     private ListView listView;
-    private RelativeLayout rl_jiesuan,rl_left,rl_right;
-    private TextView tv_num,tv_money,tv_jifen,tv_title,tv_vipname,tv_vipjifen,tv_vipyue,tv_vipdengji;
+    private RelativeLayout rl_jiesuan, rl_left, rl_right;
+    private TextView tv_num, tv_money, tv_jifen, tv_title, tv_vipname, tv_vipjifen, tv_vipyue, tv_vipdengji;
     private EditText et_card;
+    TextView mVipTvCarcard;
+    TextView mVipTvSfzcard;
     private Dialog dialog;
     private Dialog paydialog;
     private Activity ac;
@@ -87,9 +87,9 @@ public class NumRechargeActivity extends Activity implements
     private String editString;
     private NumRechargeAdapter adapter;
     private List<NumServece> list;
-    private double num=0,money=0,jifen=0,xfmoney=0;
+    private double num = 0, money = 0, jifen = 0, xfmoney = 0;
     private ShopChangeReceiver shopchangeReceiver;
-    private boolean isSuccess=false;
+    private boolean isSuccess = false;
     private Dialog jiesuanDialog;
 
     private Handler handler = new Handler() {
@@ -103,27 +103,31 @@ public class NumRechargeActivity extends Activity implements
                     tv_vipjifen.setText(info.getMemPoint());
                     tv_vipyue.setText(info.getMemMoney());
                     tv_vipdengji.setText(info.getLevelName());
+                    mVipTvCarcard.setText(info.MemCarNumber);
+                    mVipTvSfzcard.setText(info.MemIdentityCard);
                     PreferenceHelper.write(ac, "shoppay", "vipcar", et_card.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "vipname", tv_vipname.getText().toString());
-                    PreferenceHelper.write(ac, "shoppay", "memid",info.getMemID());
+                    PreferenceHelper.write(ac, "shoppay", "memid", info.getMemID());
                     PreferenceHelper.write(ac, "shoppay", "MemMoney", info.getMemMoney() + "");
-                    PreferenceHelper.write(ac, "shoppay", "jifenall",  info.getMemPoint());
+                    PreferenceHelper.write(ac, "shoppay", "jifenall", info.getMemPoint());
                     PreferenceHelper.write(ac, "shoppay", "isSuccess", true);
                     PreferenceHelper.write(ac, "shoppay", "isInput", true);
-                    isSuccess=true;
+                    isSuccess = true;
                     break;
                 case 2:
                     tv_vipname.setText("");
                     tv_vipjifen.setText("");
                     tv_vipyue.setText("");
                     tv_vipdengji.setText("");
+                    mVipTvCarcard.setText("");
+                    mVipTvSfzcard.setText("");
                     PreferenceHelper.write(ac, "shoppay", "isSuccess", false);
-                    if(et_card.getText().toString().equals("")||et_card.getText().toString()==null){
+                    if (et_card.getText().toString().equals("") || et_card.getText().toString() == null) {
                         PreferenceHelper.write(ac, "shoppay", "isInput", false);
-                    }else{
+                    } else {
                         PreferenceHelper.write(ac, "shoppay", "isInput", true);
                     }
-                    isSuccess=false;
+                    isSuccess = false;
                     break;
             }
         }
@@ -136,19 +140,20 @@ public class NumRechargeActivity extends Activity implements
     private String orderAccount;
     private MyApplication app;
     private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_numrecharge);
-        ac=this;
-        app= (MyApplication) getApplication();
-       dialog= DialogUtil.loadingDialog(NumRechargeActivity.this,1);
-        paydialog= DialogUtil.payloadingDialog(NumRechargeActivity.this,1);
-        dbAdapter=DBAdapter.getInstance(ac);
+        ac = this;
+        app = (MyApplication) getApplication();
+        dialog = DialogUtil.loadingDialog(NumRechargeActivity.this, 1);
+        paydialog = DialogUtil.payloadingDialog(NumRechargeActivity.this, 1);
+        dbAdapter = DBAdapter.getInstance(ac);
         PreferenceHelper.write(ac, "shoppay", "memid", "");
-        PreferenceHelper.write(ac, "shoppay", "vipcar","无");
+        PreferenceHelper.write(ac, "shoppay", "vipcar", "无");
         PreferenceHelper.write(ac, "shoppay", "isInput", false);
-        PreferenceHelper.write(MyApplication.context,"shoppay","viptoast","未查询到会员");
+        PreferenceHelper.write(MyApplication.context, "shoppay", "viptoast", "未查询到会员");
         dbAdapter.deleteShopCar();
         initView();
         obtainServeceShop();
@@ -198,33 +203,31 @@ public class NumRechargeActivity extends Activity implements
         final PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
         client.setCookieStore(myCookieStore);
         RequestParams params = new RequestParams();
-        String url= UrlTools.obtainUrl(ac,"?Source=3","GetListService");
-        LogUtils.d("xxurl",url);
-        client.post(url, params, new AsyncHttpResponseHandler()
-        {
+        String url = UrlTools.obtainUrl(ac, "?Source=3", "GetListService");
+        LogUtils.d("xxurl", url);
+        client.post(url, params, new AsyncHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
-            {
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
                     dialog.dismiss();
-                    LogUtils.d("xxNumshopS",new String(responseBody,"UTF-8"));
-                    JSONObject jso=new JSONObject(new String(responseBody,"UTF-8"));
-                    if(jso.getInt("flag")==1){
+                    LogUtils.d("xxNumshopS", new String(responseBody, "UTF-8"));
+                    JSONObject jso = new JSONObject(new String(responseBody, "UTF-8"));
+                    if (jso.getInt("flag") == 1) {
                         Gson gson = new Gson();
-                        Type listType = new TypeToken<List<Shop>>(){}.getType();
+                        Type listType = new TypeToken<List<Shop>>() {
+                        }.getType();
                         List<Shop> list = gson.fromJson(jso.getString("vdata"), listType);
-                        adapter=new NumRechargeAdapter(NumRechargeActivity.this,list);
+                        adapter = new NumRechargeAdapter(NumRechargeActivity.this, list);
                         listView.setAdapter(adapter);
-                    }else{
+                    } else {
                         Toast.makeText(ac, jso.getString("msg"), Toast.LENGTH_SHORT).show();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                 }
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)
-            {
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 dialog.dismiss();
             }
         });
@@ -233,17 +236,14 @@ public class NumRechargeActivity extends Activity implements
     @Override
     protected void onResume() {
         super.onResume();
-      new ReadCardOpt(et_card);
+        new ReadCardOpt(et_card);
     }
 
     @Override
     protected void onStop() {
-        try
-        {
+        try {
             new ReadCardOpt().overReadCard();
-        }
-        catch (RemoteException e)
-        {
+        } catch (RemoteException e) {
             e.printStackTrace();
         }
         super.onStop();
@@ -271,18 +271,18 @@ public class NumRechargeActivity extends Activity implements
         client.setCookieStore(myCookieStore);
         RequestParams params = new RequestParams();
         params.put("MemCard", editString);
-        LogUtils.d("xxparams",params.toString());
-        String url= UrlTools.obtainUrl(ac,"?Source=3","GetMem");
-        LogUtils.d("xxurl",url);
+        LogUtils.d("xxparams", params.toString());
+        String url = UrlTools.obtainUrl(ac, "?Source=3", "GetMem");
+        LogUtils.d("xxurl", url);
         client.post(url, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
                     LogUtils.d("xxVipinfoS", new String(responseBody, "UTF-8"));
                     JSONObject jso = new JSONObject(new String(responseBody, "UTF-8"));
-                    if(jso.getInt("flag")==1){
+                    if (jso.getInt("flag") == 1) {
                         Gson gson = new Gson();
-                        VipInfoMsg infomsg=gson.fromJson(new String(responseBody, "UTF-8"),VipInfoMsg.class);
+                        VipInfoMsg infomsg = gson.fromJson(new String(responseBody, "UTF-8"), VipInfoMsg.class);
                         Message msg = handler.obtainMessage();
                         msg.what = 1;
                         msg.obj = infomsg.getVdata().get(0);
@@ -313,19 +313,21 @@ public class NumRechargeActivity extends Activity implements
      */
     private void initView() {
         // TODO Auto-generated method stub
-        rl_left= (RelativeLayout) findViewById(R.id.rl_left);
-        rl_jiesuan= (RelativeLayout) findViewById(R.id.numrecharge_rl_jiesan);
+        rl_left = (RelativeLayout) findViewById(R.id.rl_left);
+        rl_jiesuan = (RelativeLayout) findViewById(R.id.numrecharge_rl_jiesan);
 
-        tv_jifen= (TextView) findViewById(R.id.numrecharge_tv_jifen);
-        tv_vipjifen= (TextView) findViewById(R.id.numrecharge_tv_vipjifen);
-        tv_vipyue= (TextView) findViewById(R.id.numrecharge_tv_vipyue);
-        tv_vipname= (TextView) findViewById(R.id.numrecharge_tv_vipname);
-        tv_num= (TextView) findViewById(R.id.numrecharge_tv_num);
-        tv_vipdengji= (TextView) findViewById(R.id.vip_tv_vipdengji);
-        tv_money= (TextView) findViewById(R.id.numrecharge_tv_money);
-        tv_title= (TextView) findViewById(R.id.tv_title);
-         tv_title.setText("会员充次");
-        et_card= (EditText) findViewById(R.id.numrecharge_et_card);
+        tv_jifen = (TextView) findViewById(R.id.numrecharge_tv_jifen);
+        tv_vipjifen = (TextView) findViewById(R.id.numrecharge_tv_vipjifen);
+        tv_vipyue = (TextView) findViewById(R.id.numrecharge_tv_vipyue);
+        tv_vipname = (TextView) findViewById(R.id.numrecharge_tv_vipname);
+        tv_num = (TextView) findViewById(R.id.numrecharge_tv_num);
+        tv_vipdengji = (TextView) findViewById(R.id.vip_tv_vipdengji);
+        tv_money = (TextView) findViewById(R.id.numrecharge_tv_money);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        mVipTvCarcard = findViewById(R.id.vip_tv_carcard);
+        mVipTvSfzcard = findViewById(R.id.vip_tv_sfzcard);
+        tv_title.setText("会员充次");
+        et_card = (EditText) findViewById(R.id.numrecharge_et_card);
         listView = (ListView) findViewById(R.id.listview);
         rl_right = (RelativeLayout) findViewById(R.id.rl_right);
         rl_right.setOnClickListener(this);
@@ -334,15 +336,15 @@ public class NumRechargeActivity extends Activity implements
         rl_jiesuan.setOnClickListener(new NoDoubleClickListener() {
             @Override
             protected void onNoDoubleClick(View view) {
-                if(tv_num.getText().toString().equals("0")){
+                if (tv_num.getText().toString().equals("0")) {
                     Toast.makeText(getApplicationContext(), "请选择商品",
                             Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     if (CommonUtils.checkNet(getApplicationContext())) {
-                        if(et_card.getText().toString().equals("")||et_card.getText().toString()==null){
-                            Toast.makeText(ac,"请输入会员卡号",Toast.LENGTH_SHORT).show();
-                        }else{
-                            jiesuanDialog= NumRechargeDialog.jiesuanDialog(app,dialog,NumRechargeActivity.this, 1,"num", Double.parseDouble(tv_money.getText().toString()), new InterfaceBack() {
+                        if (et_card.getText().toString().equals("") || et_card.getText().toString() == null) {
+                            Toast.makeText(ac, "请输入会员卡号", Toast.LENGTH_SHORT).show();
+                        } else {
+                            jiesuanDialog = NumRechargeDialog.jiesuanDialog(app, dialog, NumRechargeActivity.this, 1, "num", Double.parseDouble(tv_money.getText().toString()), new InterfaceBack() {
                                 @Override
                                 public void onResponse(Object response) {
                                     if (response.toString().equals("wxpay")) {
@@ -364,15 +366,13 @@ public class NumRechargeActivity extends Activity implements
                                 }
                             });
                         }
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getApplicationContext(), "请检查网络是否可用",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
-
 
 
     }
@@ -382,6 +382,7 @@ public class NumRechargeActivity extends Activity implements
                             long id) {
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -398,6 +399,7 @@ public class NumRechargeActivity extends Activity implements
                 break;
         }
     }
+
     private void pay(String codedata) {
         paydialog.show();
         AsyncHttpClient client = new AsyncHttpClient();
@@ -420,7 +422,7 @@ public class NumRechargeActivity extends Activity implements
                 map.put("payType", 3);
                 break;
         }
-        client.setTimeout(120*1000);
+        client.setTimeout(120 * 1000);
         LogUtils.d("xxparams", map.toString());
         String url = UrlTools.obtainUrl(ac, "?Source=3", "PayOnLine");
         LogUtils.d("xxurl", url);
@@ -462,7 +464,7 @@ public class NumRechargeActivity extends Activity implements
         });
     }
 
-    private  void jiesuan(String orderNum){
+    private void jiesuan(String orderNum) {
         dialog.show();
         AsyncHttpClient client = new AsyncHttpClient();
         final PersistentCookieStore myCookieStore = new PersistentCookieStore(context);
@@ -533,7 +535,7 @@ public class NumRechargeActivity extends Activity implements
                             }
                         }
                         finish();
-                    }else{
+                    } else {
                         Toast.makeText(context, jso.getString("msg"), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
@@ -553,7 +555,7 @@ public class NumRechargeActivity extends Activity implements
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.rl_right:
                 if (ContextCompat.checkSelfPermission(ac, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
@@ -571,27 +573,29 @@ public class NumRechargeActivity extends Activity implements
                 break;
         }
     }
-    private class  ShopChangeReceiver extends BroadcastReceiver{
+
+    private class ShopChangeReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("xx","ShopChangeReceiver");
-            List<ShopCar> listss= dbAdapter.getListShopCar(PreferenceHelper.readString(context,"shoppay","account","123"));
-            num=0;
-            money=0;
-            for(ShopCar shopCar:listss){
-                if(shopCar.count==0){
+            Log.d("xx", "ShopChangeReceiver");
+            List<ShopCar> listss = dbAdapter.getListShopCar(PreferenceHelper.readString(context, "shoppay", "account", "123"));
+            num = 0;
+            money = 0;
+            for (ShopCar shopCar : listss) {
+                if (shopCar.count == 0) {
 
-                }else{
-                    num=num+shopCar.count;
-                    money=money+Double.parseDouble(shopCar.discountmoney);
+                } else {
+                    num = num + shopCar.count;
+                    money = money + Double.parseDouble(shopCar.discountmoney);
                 }
             }
-            tv_num.setText((int)num+"");
-            tv_money.setText(StringUtil.twoNum(money+""));
+            tv_num.setText((int) num + "");
+            tv_money.setText(StringUtil.twoNum(money + ""));
 
         }
     }
+
     /**
      * 广播接收器
      *
