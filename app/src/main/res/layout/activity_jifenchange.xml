@@ -212,7 +212,7 @@
             android:layout_marginLeft="10dp"
             />
         <TextView
-            android:id="@+id/vip_tv_oiltype"
+            android:id="@+id/vip_tv_sfzcard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

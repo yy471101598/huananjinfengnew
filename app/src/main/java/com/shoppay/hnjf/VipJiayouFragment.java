@@ -89,6 +89,7 @@ public class VipJiayouFragment extends Fragment {
     private EditText et_password;
     private MyApplication app;
     private SystemQuanxian sysquanxian;
+    private boolean isMoneyJisuan=false,isOilJisuan=false;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -256,6 +257,38 @@ public class VipJiayouFragment extends Fragment {
 
                 //延迟800ms，如果不再输入字符，则执行该线程的run方法
                 handler.postDelayed(delayRun, 800);
+            }
+        });
+        et_xfmoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                     isMoneyJisuan=false;
+            }
+        });
+        tv_zhmoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                isOilJisuan=false;
             }
         });
 //        et_xfmoney.addTextChangedListener(new TextWatcher() {
@@ -584,8 +617,9 @@ public class VipJiayouFragment extends Fragment {
                     if (tv_oil.getText().toString().equals("请选择")) {
                         Toast.makeText(MyApplication.context, "请先选择油品", Toast.LENGTH_SHORT).show();
                     } else {
-                        if (et_xfmoney.getText().toString().equals("")) {
-                          String    xfmoney = et_xfmoney.getText().toString();
+                        if (!et_xfmoney.getText().toString().equals("")) {
+                            isMoneyJisuan=true;
+                            String xfmoney = et_xfmoney.getText().toString();
                             double price = CommonUtils.del(Double.parseDouble(oilmsg.getOilPrice()), Double.parseDouble(oilmsg.getOilDiscountMoney()));
                             String num = StringUtil.twoNum(CommonUtils.div(Double.parseDouble(xfmoney), price, 2) + "");
                             int point = (int) Double.parseDouble(num);
@@ -599,6 +633,7 @@ public class VipJiayouFragment extends Fragment {
                             }
                             tv_yhq.setText("请选择");
                             tv_sfmoney.setText(xfmoney);
+                            yhqmsg = null;
                         } else {
                             ToastUtils.showToast(getActivity(), "请输入消费金额");
                         }
@@ -615,8 +650,8 @@ public class VipJiayouFragment extends Fragment {
                     if (tv_oil.getText().toString().equals("请选择")) {
                         Toast.makeText(MyApplication.context, "请先选择油品", Toast.LENGTH_SHORT).show();
                     } else {
-                        if (tv_zhmoney.getText().toString().equals("")) {
-
+                        if (!tv_zhmoney.getText().toString().equals("")) {
+                            isOilJisuan=true;
                             String xfmoney = tv_zhmoney.getText().toString();
                             double price = CommonUtils.del(Double.parseDouble(oilmsg.getOilPrice()), Double.parseDouble(oilmsg.getOilDiscountMoney()));
                             String num = StringUtil.twoNum(CommonUtils.multiply(xfmoney, price + "") + "");
@@ -630,6 +665,7 @@ public class VipJiayouFragment extends Fragment {
                             }
                             tv_yhq.setText("请选择");
                             tv_sfmoney.setText(num);
+                            yhqmsg = null;
                         } else {
                             ToastUtils.showToast(getActivity(), "请输入加油升数");
                         }
@@ -639,7 +675,6 @@ public class VipJiayouFragment extends Fragment {
                 }
             }
         });
-
 
 
         rl_oilchose.setOnClickListener(new NoDoubleClickListener() {
@@ -757,8 +792,9 @@ public class VipJiayouFragment extends Fragment {
 
                     Toast.makeText(MyApplication.context, "余额不足",
                             Toast.LENGTH_SHORT).show();
-                } else {
+                }else {
                     if (CommonUtils.checkNet(MyApplication.context)) {
+                        if (isOilJisuan ||isMoneyJisuan) {
                         SystemQuanxian sysquanxian = app.getSysquanxian();
 
                         if (isYue && sysquanxian.ispassword == 1) {
@@ -797,7 +833,10 @@ public class VipJiayouFragment extends Fragment {
 
 
                         }
-
+                    }else{
+                        Toast.makeText(MyApplication.context, "修改数据还未计算",
+                                Toast.LENGTH_SHORT).show();
+                    }
                     } else {
                         Toast.makeText(MyApplication.context, "请检查网络是否可用",
                                 Toast.LENGTH_SHORT).show();
@@ -839,9 +878,12 @@ public class VipJiayouFragment extends Fragment {
         }
         params.put("UserPwd", password);
         params.put("OilID", oilmsg.getOilID());
-        params.put("CouponID", yhqmsg.DetailID);
+        if (null == yhqmsg) {
+            params.put("CouponID", "");
+        } else {
+            params.put("CouponID", yhqmsg.DetailID);
+        }
         params.put("CouponMoney", CommonUtils.del(Double.parseDouble(et_xfmoney.getText().toString()), Double.parseDouble(tv_sfmoney.getText().toString())));
-        LogUtils.d("xxyh", new Gson().toJson(yhqmsg));
         LogUtils.d("xxparams", params.toString());
         String url = UrlTools.obtainUrl(getActivity(), "?Source=3", "OilExpense");
         LogUtils.d("xxurl", url);

@@ -90,8 +90,8 @@ public class BalanceActivity extends FragmentActivity implements
     private LeftAdapter adapter;
     private BalanceFragment myFragment;
     public static int mPosition;
-    private RelativeLayout rl_yes, rl_no, rl_card, rl_jiesuan, rl_left, rl_vipname, rl_vipjifen, rl_vipyue, rl_vipdengji;
-    private TextView tv_yes, tv_no, tv_num, tv_money, tv_jifen, tv_title, tv_vipname, tv_vipjifen, tv_vipyue, tv_vipdengji;
+    private RelativeLayout rl_yes, rl_no, rl_card, rl_jiesuan, rl_left, rl_vipname, rl_vipjifen, rl_vipyue, rl_vipdengji,rl_carcard,rl_sfzcard;
+    private TextView tv_yes, tv_no, tv_num, tv_money, tv_jifen, tv_title, tv_vipname, tv_vipjifen, tv_vipyue, tv_vipdengji,mVipTvCarcard,mVipTvSfzcard;
     private LinearLayout li_jifen;
     private EditText et_card;
     private String type = "否";
@@ -119,6 +119,8 @@ public class BalanceActivity extends FragmentActivity implements
                     tv_vipjifen.setText(info.getMemPoint());
                     tv_vipyue.setText(info.getMemMoney());
                     tv_vipdengji.setText(info.getLevelName());
+                    mVipTvCarcard.setText(info.MemCarNumber);
+                    mVipTvSfzcard.setText(info.MemIdentityCard);
                     PreferenceHelper.write(ac, "shoppay", "vipcar", et_card.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "vipname", tv_vipname.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "memid", info.getMemID());
@@ -131,6 +133,8 @@ public class BalanceActivity extends FragmentActivity implements
                     tv_vipjifen.setText("");
                     tv_vipyue.setText("");
                     tv_vipdengji.setText("");
+                    mVipTvCarcard.setText("");
+                    mVipTvSfzcard.setText("");
                     isSuccess = false;
                     break;
                 case 3:
@@ -150,6 +154,7 @@ public class BalanceActivity extends FragmentActivity implements
     private String orderAccount;
     private String paytype;
     private MyApplication app;
+    private LinearLayout li_vip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -424,6 +429,11 @@ public class BalanceActivity extends FragmentActivity implements
         rl_jiesuan = (RelativeLayout) findViewById(R.id.balance_rl_jiesan);
         rl_vipyue = (RelativeLayout) findViewById(R.id.balance_rl_vipyue);
         rl_vipdengji = (RelativeLayout) findViewById(R.id.balance_rl_vipdengji);
+        rl_carcard=findViewById(R.id.rl_carcard);
+        rl_sfzcard=findViewById(R.id.rl_sfzcard);
+        mVipTvCarcard=findViewById(R.id.vip_tv_carcard);
+        mVipTvSfzcard=findViewById(R.id.vip_tv_sfzcard);
+        li_vip=findViewById(R.id.li_vip);
 
         tv_jifen = (TextView) findViewById(R.id.balance_tv_jifen);
         tv_vipjifen = (TextView) findViewById(R.id.balance_tv_vipjifen);
@@ -543,19 +553,22 @@ public class BalanceActivity extends FragmentActivity implements
         tv_no.setTextColor(getResources().getColor(R.color.white));
         type = "否";
         PreferenceHelper.write(ac, "shoppay", "isSan", false);
-        li_jifen.setVisibility(View.VISIBLE);
-        rl_card.setVisibility(View.VISIBLE);
-        rl_vipname.setVisibility(View.VISIBLE);
-        rl_vipdengji.setVisibility(View.VISIBLE);
-        rl_vipjifen.setVisibility(View.VISIBLE);
-        rl_vipyue.setVisibility(View.VISIBLE);
+//        li_jifen.setVisibility(View.VISIBLE);
+//        rl_card.setVisibility(View.VISIBLE);
+//        rl_vipname.setVisibility(View.VISIBLE);
+//        rl_vipdengji.setVisibility(View.VISIBLE);
+//        rl_vipjifen.setVisibility(View.VISIBLE);
+//        rl_vipyue.setVisibility(View.VISIBLE);
+//        rl_carcard.setVisibility(View.VISIBLE);
+//        rl_sfzcard.setVisibility(View.VISIBLE);
+        li_vip.setVisibility(View.VISIBLE);
         PreferenceHelper.write(ac, "shoppay", "memid", "");
         et_card.setText("");
         tv_vipjifen.setText("");
         tv_vipname.setText("");
         tv_vipyue.setText("");
+        tv_vipdengji.setText("");
         tv_money.setText("0");
-        tv_vipdengji.setText("0");
         tv_jifen.setText("0");
         tv_num.setText("0");
 
@@ -773,16 +786,18 @@ public class BalanceActivity extends FragmentActivity implements
                 tv_yes.setTextColor(getResources().getColor(R.color.white));
                 tv_no.setTextColor(getResources().getColor(R.color.text_30));
                 type = "是";
-                li_jifen.setVisibility(View.GONE);
-                rl_card.setVisibility(View.GONE);
-                rl_vipname.setVisibility(View.GONE);
-                rl_vipjifen.setVisibility(View.GONE);
-                rl_vipdengji.setVisibility(View.GONE);
-                rl_vipyue.setVisibility(View.GONE);
+//                li_jifen.setVisibility(View.GONE);
+//                rl_card.setVisibility(View.GONE);
+//                rl_vipname.setVisibility(View.GONE);
+//                rl_vipjifen.setVisibility(View.GONE);
+//                rl_vipdengji.setVisibility(View.GONE);
+//                rl_vipyue.setVisibility(View.GONE);
+//                rl_carcard.setVisibility(View.GONE);
+//                rl_sfzcard.setVisibility(View.GONE);
+                li_vip.setVisibility(View.GONE);
                 dbAdapter.deleteShopCar();
                 tv_money.setText("0");
                 tv_jifen.setText("0");
-                tv_vipdengji.setText("0");
                 tv_num.setText("0");
                 PreferenceHelper.write(ac, "shoppay", "isSan", true);
                 PreferenceHelper.write(ac, "shoppay", "memid", "");
@@ -799,13 +814,17 @@ public class BalanceActivity extends FragmentActivity implements
                 tv_yes.setTextColor(getResources().getColor(R.color.text_30));
                 tv_no.setTextColor(getResources().getColor(R.color.white));
                 type = "否";
+                isSuccess=false;
                 PreferenceHelper.write(ac, "shoppay", "isSan", false);
-                li_jifen.setVisibility(View.VISIBLE);
-                rl_card.setVisibility(View.VISIBLE);
-                rl_vipname.setVisibility(View.VISIBLE);
-                rl_vipdengji.setVisibility(View.VISIBLE);
-                rl_vipjifen.setVisibility(View.VISIBLE);
-                rl_vipyue.setVisibility(View.VISIBLE);
+//                li_jifen.setVisibility(View.VISIBLE);
+//                rl_card.setVisibility(View.VISIBLE);
+//                rl_vipname.setVisibility(View.VISIBLE);
+//                rl_vipdengji.setVisibility(View.VISIBLE);
+//                rl_vipjifen.setVisibility(View.VISIBLE);
+//                rl_vipyue.setVisibility(View.VISIBLE);
+//                rl_carcard.setVisibility(View.VISIBLE);
+//                rl_sfzcard.setVisibility(View.VISIBLE);
+                li_vip.setVisibility(View.VISIBLE);
                 dbAdapter.deleteShopCar();
                 PreferenceHelper.write(ac, "shoppay", "memid", "");
                 et_card.setText("");
@@ -813,7 +832,9 @@ public class BalanceActivity extends FragmentActivity implements
                 tv_vipname.setText("");
                 tv_vipyue.setText("");
                 tv_money.setText("0");
-                tv_vipdengji.setText("0");
+                tv_vipdengji.setText("");
+                mVipTvSfzcard.setText("");
+                mVipTvCarcard.setText("");
                 tv_jifen.setText("0");
                 tv_num.setText("0");
                 for (ShopClass c : list) {
