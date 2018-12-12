@@ -284,6 +284,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         PreferenceHelper.write(ac, "shoppay", "ShopID", jso.getJSONObject("vdata").getString("ShopID"));
                         JSONArray memuau = jso.getJSONObject("vdata").getJSONArray("MenuAuthority");
                         JSONArray dataau = jso.getJSONObject("vdata").getJSONArray("DataAuthority");
+                        myApplication.setIsPointByOilExp(jso.getJSONObject("vdata").getInt("IsPointByOilExp"));
+                        myApplication.setOilExpPointNum(jso.getJSONObject("vdata").getInt("OilExpPointNum"));
 //                        "DataAuthority":[{"1.1":1,"1.2":1,"1.3":1,"1.4":1,"1.5":1,"1.6":1,"1.7":0}]}
                         menuquanxian = new QuanxianManage();
                         SystemQuanxian sysquanxian = new SystemQuanxian();
