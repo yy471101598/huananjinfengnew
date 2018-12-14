@@ -16,4 +16,6 @@ public class QuanxianManage implements Serializable{
     public int lipingduihuan;
     public int jifenbiandong;
     public int jiaobanmanage;
+    public int jiaoyouxiaofei;
+    public int huiyuanqiandao;
 }

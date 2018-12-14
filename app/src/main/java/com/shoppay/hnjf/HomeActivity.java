@@ -58,8 +58,12 @@ public class HomeActivity extends Activity{
                 Home home=(Home) adapterView.getItemAtPosition(i);
                 switch (home.name){
                     case "加油消费":
-                        Intent jy=new Intent(ac,JiayouConsumptionActivity.class);
-                        startActivity(jy);
+                        if(quanxian.jiaoyouxiaofei==1){
+                            Intent jy=new Intent(ac,JiayouConsumptionActivity.class);
+                            startActivity(jy);
+                        }else{
+                            Toast.makeText(ac,"该功能未授权",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case "会员查询":
                         Intent chaxun=new Intent(ac,VipChaxunActivity.class);
@@ -74,8 +78,12 @@ public class HomeActivity extends Activity{
                         }
                         break;
                     case "会员签到":
-                        Intent qiandao=new Intent(ac,VipQiandaoActivity.class);
-                        startActivity(qiandao);
+                        if(quanxian.huiyuanqiandao==1){
+                            Intent qiandao=new Intent(ac,VipQiandaoActivity.class);
+                            startActivity(qiandao);
+                        }else{
+                            Toast.makeText(ac,"该功能未授权",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case "商品消费":
                         if(quanxian.shopxiaofei==1) {

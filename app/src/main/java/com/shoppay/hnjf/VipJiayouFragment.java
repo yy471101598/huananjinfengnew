@@ -89,7 +89,7 @@ public class VipJiayouFragment extends Fragment {
     private EditText et_password;
     private MyApplication app;
     private SystemQuanxian sysquanxian;
-    private boolean isMoneyJisuan=false,isOilJisuan=false;
+    private boolean isMoneyJisuan = false, isOilJisuan = false;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -272,7 +272,7 @@ public class VipJiayouFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                     isMoneyJisuan=false;
+                isMoneyJisuan = false;
             }
         });
         tv_zhmoney.addTextChangedListener(new TextWatcher() {
@@ -288,7 +288,7 @@ public class VipJiayouFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                isOilJisuan=false;
+                isOilJisuan = false;
             }
         });
 //        et_xfmoney.addTextChangedListener(new TextWatcher() {
@@ -618,19 +618,20 @@ public class VipJiayouFragment extends Fragment {
                         Toast.makeText(MyApplication.context, "请先选择油品", Toast.LENGTH_SHORT).show();
                     } else {
                         if (!et_xfmoney.getText().toString().equals("")) {
-                            isMoneyJisuan=true;
+                            isMoneyJisuan = true;
                             String xfmoney = et_xfmoney.getText().toString();
                             double price = CommonUtils.del(Double.parseDouble(oilmsg.getOilPrice()), Double.parseDouble(oilmsg.getOilDiscountMoney()));
                             String num = StringUtil.twoNum(CommonUtils.div(Double.parseDouble(xfmoney), price, 2) + "");
                             int point = (int) Double.parseDouble(num);
                             tv_zhmoney.setText(num);
-                            if (app.getIsPointByOilExp() == 1) {
-                                int po = (int) Double.parseDouble(CommonUtils.multiply(point + "", app.getOilExpPointNum() + ""));
-                                tv_obtainjf.setText(po + "");
-                            } else {
-                                int po = (int) CommonUtils.div(Double.parseDouble(xfmoney), Double.parseDouble(oilmsg.getOilPoint()), 2);
-                                tv_obtainjf.setText(po + "");
-                            }
+//                            if (app.getIsPointByOilExp() == 1) {
+//                                int po = (int) Double.parseDouble(CommonUtils.multiply(point + "", app.getOilExpPointNum() + ""));
+//                                tv_obtainjf.setText(po + "");
+//                            } else {
+//                                int po = (int) CommonUtils.div(Double.parseDouble(xfmoney), Double.parseDouble(oilmsg.getOilPoint()), 2);
+//                                tv_obtainjf.setText(po + "");
+//                            }
+                            tv_obtainjf.setText((int) Double.parseDouble(CommonUtils.multiply(oilmsg.getOilPoint(), num)) + "");
                             tv_yhq.setText("请选择");
                             tv_sfmoney.setText(xfmoney);
                             yhqmsg = null;
@@ -651,18 +652,19 @@ public class VipJiayouFragment extends Fragment {
                         Toast.makeText(MyApplication.context, "请先选择油品", Toast.LENGTH_SHORT).show();
                     } else {
                         if (!tv_zhmoney.getText().toString().equals("")) {
-                            isOilJisuan=true;
+                            isOilJisuan = true;
                             String xfmoney = tv_zhmoney.getText().toString();
                             double price = CommonUtils.del(Double.parseDouble(oilmsg.getOilPrice()), Double.parseDouble(oilmsg.getOilDiscountMoney()));
                             String num = StringUtil.twoNum(CommonUtils.multiply(xfmoney, price + "") + "");
                             et_xfmoney.setText(num);
-                            if (app.getIsPointByOilExp() == 1) {
-                                int po = (int) Double.parseDouble(CommonUtils.multiply(xfmoney + "", app.getOilExpPointNum() + ""));
-                                tv_obtainjf.setText(po + "");
-                            } else {
-                                int po = (int) CommonUtils.div(Double.parseDouble(num), Double.parseDouble(oilmsg.getOilPoint()), 2);
-                                tv_obtainjf.setText(po + "");
-                            }
+//                            if (app.getIsPointByOilExp() == 1) {
+//                                int po = (int) Double.parseDouble(CommonUtils.multiply(xfmoney + "", app.getOilExpPointNum() + ""));
+//                                tv_obtainjf.setText(po + "");
+//                            } else {
+//                                int po = (int) CommonUtils.div(Double.parseDouble(num), Double.parseDouble(oilmsg.getOilPoint()), 2);
+//                                tv_obtainjf.setText(po + "");
+//                            }
+                            tv_obtainjf.setText((int) Double.parseDouble(CommonUtils.multiply(oilmsg.getOilPoint(), xfmoney)) + "");
                             tv_yhq.setText("请选择");
                             tv_sfmoney.setText(num);
                             yhqmsg = null;
@@ -792,51 +794,51 @@ public class VipJiayouFragment extends Fragment {
 
                     Toast.makeText(MyApplication.context, "余额不足",
                             Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     if (CommonUtils.checkNet(MyApplication.context)) {
-                        if (isOilJisuan ||isMoneyJisuan) {
-                        SystemQuanxian sysquanxian = app.getSysquanxian();
+                        if (isOilJisuan || isMoneyJisuan) {
+                            SystemQuanxian sysquanxian = app.getSysquanxian();
 
-                        if (isYue && sysquanxian.ispassword == 1) {
-                            DialogUtil.pwdDialog(getActivity(), 1, new InterfaceBack() {
-                                @Override
-                                public void onResponse(Object response) {
-                                    password = (String) response;
-                                    jiesuan(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
-                                }
+                            if (isYue && sysquanxian.ispassword == 1) {
+                                DialogUtil.pwdDialog(getActivity(), 1, new InterfaceBack() {
+                                    @Override
+                                    public void onResponse(Object response) {
+                                        password = (String) response;
+                                        jiesuan(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
+                                    }
 
-                                @Override
-                                public void onErrorResponse(Object msg) {
+                                    @Override
+                                    public void onErrorResponse(Object msg) {
 
-                                }
-                            });
-                        } else {
-                            if (isWx) {
-                                if (sysquanxian.iswxpay == 0) {
-                                    Intent mipca = new Intent(getActivity(), MipcaActivityCapture.class);
-                                    mipca.putExtra("type", "pay");
-                                    startActivityForResult(mipca, 222);
-                                } else {
-                                    jiesuan(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
-                                }
-                            } else if (isZhifubao) {
-                                if (sysquanxian.iszfbpay == 0) {
-                                    Intent mipca = new Intent(getActivity(), MipcaActivityCapture.class);
-                                    mipca.putExtra("type", "pay");
-                                    startActivityForResult(mipca, 222);
-                                } else {
-                                    jiesuan(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
-                                }
+                                    }
+                                });
                             } else {
-                                jiesuan(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
+                                if (isWx) {
+                                    if (sysquanxian.iswxpay == 0) {
+                                        Intent mipca = new Intent(getActivity(), MipcaActivityCapture.class);
+                                        mipca.putExtra("type", "pay");
+                                        startActivityForResult(mipca, 222);
+                                    } else {
+                                        jiesuan(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
+                                    }
+                                } else if (isZhifubao) {
+                                    if (sysquanxian.iszfbpay == 0) {
+                                        Intent mipca = new Intent(getActivity(), MipcaActivityCapture.class);
+                                        mipca.putExtra("type", "pay");
+                                        startActivityForResult(mipca, 222);
+                                    } else {
+                                        jiesuan(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
+                                    }
+                                } else {
+                                    jiesuan(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
+                                }
+
+
                             }
-
-
+                        } else {
+                            Toast.makeText(MyApplication.context, "修改数据还未计算",
+                                    Toast.LENGTH_SHORT).show();
                         }
-                    }else{
-                        Toast.makeText(MyApplication.context, "修改数据还未计算",
-                                Toast.LENGTH_SHORT).show();
-                    }
                     } else {
                         Toast.makeText(MyApplication.context, "请检查网络是否可用",
                                 Toast.LENGTH_SHORT).show();
