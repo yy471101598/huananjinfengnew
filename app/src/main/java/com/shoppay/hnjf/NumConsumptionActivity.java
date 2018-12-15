@@ -47,6 +47,7 @@ import com.shoppay.hnjf.tools.DialogUtil;
 import com.shoppay.hnjf.tools.ESCUtil;
 import com.shoppay.hnjf.tools.LogUtils;
 import com.shoppay.hnjf.tools.MergeLinearArraysUtil;
+import com.shoppay.hnjf.tools.NullUtils;
 import com.shoppay.hnjf.tools.PreferenceHelper;
 import com.shoppay.hnjf.tools.ToastUtils;
 import com.shoppay.hnjf.tools.UrlTools;
@@ -70,7 +71,7 @@ import cz.msebera.android.httpclient.Header;
 public class NumConsumptionActivity extends Activity implements View.OnClickListener {
     private RelativeLayout rl_left, rl_jiesuan, rl_vipname;
     private EditText et_vipcard;
-    private TextView tv_title, tv_num, tv_vipname;
+    private TextView tv_title, tv_num, tv_vipname,mVipTvKamcard;
     TextView mVipTvCarcard;
     TextView mVipTvSfzcard;
     private Activity ac;
@@ -102,6 +103,7 @@ public class NumConsumptionActivity extends Activity implements View.OnClickList
                     vipTvVipdengji.setText(info.getLevelName());
                     mVipTvCarcard.setText(info.MemCarNumber);
                     mVipTvSfzcard.setText(info.MemIdentityCard);
+                    mVipTvKamcard.setText(NullUtils.noNullHandle(info.MemCardNumber).toString());
                     PreferenceHelper.write(ac,"shoppay","memid",info.getMemID());
                     PreferenceHelper.write(ac, "shoppay", "vipcar",et_vipcard.getText().toString());
                     PreferenceHelper.write(ac,"shoppay","Discount",info.getDiscount());
@@ -118,6 +120,7 @@ public class NumConsumptionActivity extends Activity implements View.OnClickList
                     vipTvVipdengji.setText("");
                     mVipTvCarcard.setText("");
                     mVipTvSfzcard.setText("");
+                    mVipTvKamcard.setText("");
                     listView.setVisibility(View.GONE);
                     break;
             }
@@ -277,6 +280,7 @@ public class NumConsumptionActivity extends Activity implements View.OnClickList
         vipTvVipdengji = (TextView) findViewById(R.id.vip_tv_vipdengji);
         vipTvVipyue = (TextView) findViewById(R.id.vip_tv_vipyue);
         vipTvJifen = (TextView) findViewById(R.id.vip_tv_jifen);
+        mVipTvKamcard=findViewById(R.id.vip_tv_kamcard);
         mVipTvCarcard=findViewById(R.id.vip_tv_carcard);
         mVipTvSfzcard=findViewById(R.id.vip_tv_sfzcard);
         tv_vipname = (TextView) findViewById(R.id.num_tv_vipname);

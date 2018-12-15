@@ -45,6 +45,7 @@ import com.shoppay.hnjf.tools.DateUtils;
 import com.shoppay.hnjf.tools.DayinUtils;
 import com.shoppay.hnjf.tools.DialogUtil;
 import com.shoppay.hnjf.tools.LogUtils;
+import com.shoppay.hnjf.tools.NullUtils;
 import com.shoppay.hnjf.tools.PreferenceHelper;
 import com.shoppay.hnjf.tools.ToastUtils;
 import com.shoppay.hnjf.tools.UrlTools;
@@ -132,6 +133,8 @@ public class JifenDuihuanActivity extends Activity {
     TextView mVipTvCarcard;
     @Bind(R.id.vip_tv_sfzcard)
     TextView mVipTvSfzcard;
+    @Bind(R.id.vip_tv_kamcard)
+    TextView mVipTvKamcard;
     private boolean isSuccess = false;
     private Activity ac;
     private List<JifenDuihuan> list;
@@ -139,9 +142,9 @@ public class JifenDuihuanActivity extends Activity {
     private DBAdapter dbAdapter;
     private JifenDuihuan jifenDuihuan;
     private ShopChangeReceiver shopChangeReceiver;
-    private int num=0;
-    private  int point=0;
-    private boolean isClick=true;
+    private int num = 0;
+    private int point = 0;
+    private boolean isClick = true;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -155,6 +158,7 @@ public class JifenDuihuanActivity extends Activity {
                     vipTvVipdengji.setText(info.getLevelName());
                     mVipTvCarcard.setText(info.MemCarNumber);
                     mVipTvSfzcard.setText(info.MemIdentityCard);
+                    mVipTvKamcard.setText(NullUtils.noNullHandle(info.MemCardNumber).toString());
                     PreferenceHelper.write(ac, "shoppay", "memid", info.getMemID());
                     PreferenceHelper.write(ac, "shoppay", "vipcar", vipEtCard.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "Discount", info.getDiscount());
@@ -169,19 +173,20 @@ public class JifenDuihuanActivity extends Activity {
                     vipTvVipyue.setText("");
                     mVipTvCarcard.setText("");
                     mVipTvSfzcard.setText("");
+                    mVipTvKamcard.setText("");
                     isSuccess = false;
                     PreferenceHelper.write(ac, "shoppay", "memid", "123");
                     PreferenceHelper.write(ac, "shoppay", "vipcar", "123");
                     break;
                 case 3:
 //                    rlDuihuanmsg.setVisibility(View.VISIBLE);
-                    jifenDuihuan=(JifenDuihuan) msg.obj;
-                    List<JifenDuihuan> jl=new CopyOnWriteArrayList<>();
+                    jifenDuihuan = (JifenDuihuan) msg.obj;
+                    List<JifenDuihuan> jl = new CopyOnWriteArrayList<>();
                     jl.addAll(list);
-                    for(int i=0;i<jl.size();i++){
-                        if(jl.get(i).GiftCode.equals(jifenDuihuan.GiftCode)){
+                    for (int i = 0; i < jl.size(); i++) {
+                        if (jl.get(i).GiftCode.equals(jifenDuihuan.GiftCode)) {
                             jl.remove(jl.get(i));
-                            jl.add(0,jifenDuihuan);
+                            jl.add(0, jifenDuihuan);
                         }
                     }
                     list.clear();
@@ -193,7 +198,7 @@ public class JifenDuihuanActivity extends Activity {
                     break;
                 case 4:
                     rlDuihuanmsg.setVisibility(View.GONE);
-                    jifenDuihuan=null;
+                    jifenDuihuan = null;
                     itemTvJifen.setText("0");
                     itemTvKucunnum.setText("0");
                     itemTvShopname.setText("");
@@ -203,8 +208,9 @@ public class JifenDuihuanActivity extends Activity {
     };
     private Dialog dialog;
     private String editString;
-    private String shopcode="";
+    private String shopcode = "";
     private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -214,10 +220,10 @@ public class JifenDuihuanActivity extends Activity {
         dialog = DialogUtil.loadingDialog(ac, 1);
         PreferenceHelper.write(context, "shoppay", "viptoast", "未查询到会员");
         ActivityStack.create().addActivity(JifenDuihuanActivity.this);
-        dbAdapter=DBAdapter.getInstance(ac);
+        dbAdapter = DBAdapter.getInstance(ac);
         dbAdapter.deleteJifenShopCar();
         PreferenceHelper.write(ac, "shoppay", "jinfenIndex", -1);
-        PreferenceHelper.write(ac,"shoppay","ischoasejifen",false);
+        PreferenceHelper.write(ac, "shoppay", "ischoasejifen", false);
         PreferenceHelper.write(ac, "shoppay", "ischoaseItemjifen", false);
         obtainDuihuanMsg();
         tvTitle.setText("积分兑换");
@@ -323,10 +329,11 @@ public class JifenDuihuanActivity extends Activity {
                     JSONObject jso = new JSONObject(new String(responseBody, "UTF-8"));
                     if (jso.getInt("flag") == 1) {
                         Gson gson = new Gson();
-                        Type listType = new TypeToken<List<JifenDuihuan>>(){}.getType();
-                        List<JifenDuihuan>  list = gson.fromJson(jso.getString("vdata"), listType);
+                        Type listType = new TypeToken<List<JifenDuihuan>>() {
+                        }.getType();
+                        List<JifenDuihuan> list = gson.fromJson(jso.getString("vdata"), listType);
                         Message msg = handler.obtainMessage();
-                        msg.obj= list.get(0);
+                        msg.obj = list.get(0);
                         msg.what = 3;
                         handler.sendMessage(msg);
                     } else {
@@ -369,22 +376,23 @@ public class JifenDuihuanActivity extends Activity {
                     JSONObject jso = new JSONObject(new String(responseBody, "UTF-8"));
                     if (jso.getInt("flag") == 1) {
                         Gson gson = new Gson();
-                        Type listType = new TypeToken<List<JifenDuihuan>>(){}.getType();
+                        Type listType = new TypeToken<List<JifenDuihuan>>() {
+                        }.getType();
                         list = gson.fromJson(jso.getString("vdata"), listType);
-                        adapter=new JifenDuihuanAdapter(ac,list);
+                        adapter = new JifenDuihuanAdapter(ac, list);
                         listview.setAdapter(adapter);
                     } else {
-                        Toast.makeText(ac,jso.getString("msg"),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ac, jso.getString("msg"), Toast.LENGTH_SHORT).show();
 
                     }
                 } catch (Exception e) {
-                    Toast.makeText(ac,"获取可兑换商品失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ac, "获取可兑换商品失败", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(ac,"获取可兑换商品失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ac, "获取可兑换商品失败", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -442,19 +450,17 @@ public class JifenDuihuanActivity extends Activity {
 
     @Override
     protected void onStop() {
-        try
-        {
+        try {
             new ReadCardOpt().overReadCard();
-        }
-        catch (RemoteException e)
-        {
+        } catch (RemoteException e) {
             e.printStackTrace();
         }
         super.onStop();
         if (delayRun != null) {
             //每次editText有变化的时候，则移除上次发出的延迟线程
             handler.removeCallbacks(delayRun);
-        }    if (codeRun != null) {
+        }
+        if (codeRun != null) {
             //每次editText有变化的时候，则移除上次发出的延迟线程
             handler.removeCallbacks(codeRun);
         }
@@ -486,7 +492,7 @@ public class JifenDuihuanActivity extends Activity {
         }
     }
 
-    @OnClick({R.id.rl_left, R.id.rl_right, R.id.item_iv_add, R.id.item_iv_del, R.id.rl_duihuan,R.id.vip_tv_dingwei})
+    @OnClick({R.id.rl_left, R.id.rl_right, R.id.item_iv_add, R.id.item_iv_del, R.id.rl_duihuan, R.id.vip_tv_dingwei})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_left:
@@ -505,50 +511,50 @@ public class JifenDuihuanActivity extends Activity {
                 }
                 break;
             case R.id.item_iv_add:
-                if( PreferenceHelper.readBoolean(ac,"shoppay","ischoaseItemjifen",false)){
-                    Toast.makeText(ac,"只能选择一种商品",Toast.LENGTH_SHORT).show();
-                }else{
-                    if(num==0){
+                if (PreferenceHelper.readBoolean(ac, "shoppay", "ischoaseItemjifen", false)) {
+                    Toast.makeText(ac, "只能选择一种商品", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (num == 0) {
                         itemIvDel.setVisibility(View.VISIBLE);
                         itemTvNum.setVisibility(View.VISIBLE);
                     }
-                    PreferenceHelper.write(ac,"shoppay","ischoasejifen",true);
-                    num=num+1;
-                    if(num>Integer.parseInt(jifenDuihuan.GiftStockNumber)){
-                        num=num-1;
+                    PreferenceHelper.write(ac, "shoppay", "ischoasejifen", true);
+                    num = num + 1;
+                    if (num > Integer.parseInt(jifenDuihuan.GiftStockNumber)) {
+                        num = num - 1;
                         Toast.makeText(ac, "该商品的最大库存量为" + jifenDuihuan.GiftStockNumber, Toast.LENGTH_SHORT).show();
                     }
-                        itemTvNum.setText(num + "");
-                        tvAllnum.setText(num + "");
-                        tvAlljifen.setText(CommonUtils.multiply(num + "", jifenDuihuan.GiftExchangePoint));
+                    itemTvNum.setText(num + "");
+                    tvAllnum.setText(num + "");
+                    tvAlljifen.setText(CommonUtils.multiply(num + "", jifenDuihuan.GiftExchangePoint));
 
                 }
                 break;
             case R.id.item_iv_del:
-                    num=num-1;
-                    if(num==0){
-                        PreferenceHelper.write(ac,"shoppay","ischoasejifen",false);
-                        itemIvDel.setVisibility(View.GONE);
-                        itemTvNum.setVisibility(View.GONE);
-                    }
-                    itemTvNum.setText(num+"");
-                    tvAllnum.setText(num+"");
-                    tvAlljifen.setText(CommonUtils.multiply(num+"",jifenDuihuan.GiftExchangePoint));
+                num = num - 1;
+                if (num == 0) {
+                    PreferenceHelper.write(ac, "shoppay", "ischoasejifen", false);
+                    itemIvDel.setVisibility(View.GONE);
+                    itemTvNum.setVisibility(View.GONE);
+                }
+                itemTvNum.setText(num + "");
+                tvAllnum.setText(num + "");
+                tvAlljifen.setText(CommonUtils.multiply(num + "", jifenDuihuan.GiftExchangePoint));
                 break;
             case R.id.rl_duihuan:
-                if(tvAllnum.getText().toString().equals("0")){
-                    Toast.makeText(ac,"请选择一种商品",Toast.LENGTH_SHORT).show();
-                }else{
-                    if(isSuccess){
-                        if(isClick) {
-                            if(Double.parseDouble(vipTvJifen.getText().toString())<point) {
+                if (tvAllnum.getText().toString().equals("0")) {
+                    Toast.makeText(ac, "请选择一种商品", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (isSuccess) {
+                        if (isClick) {
+                            if (Double.parseDouble(vipTvJifen.getText().toString()) < point) {
                                 Toast.makeText(ac, "积分不足", Toast.LENGTH_SHORT).show();
-                            }else {
+                            } else {
                                 jifenJiesuan();
                             }
                         }
-                    }else{
-                        Toast.makeText(ac,"请获取会员信息",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ac, "请获取会员信息", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -561,14 +567,14 @@ public class JifenDuihuanActivity extends Activity {
 
     private void jifenJiesuan() {
         dialog.show();
-        isClick=false;
+        isClick = false;
 
         List<JifenDuihuan> listss = dbAdapter.getListJifenShopCar(PreferenceHelper.readString(context, "shoppay", "account", "123"));
-        List<JifenDuihuan> jifenlist=new ArrayList<>();
-        for(JifenDuihuan jf:listss){
-            if(jf.count.equals("0")){
+        List<JifenDuihuan> jifenlist = new ArrayList<>();
+        for (JifenDuihuan jf : listss) {
+            if (jf.count.equals("0")) {
 
-            }else{
+            } else {
                 jifenlist.add(jf);
             }
         }
@@ -576,14 +582,14 @@ public class JifenDuihuanActivity extends Activity {
         final PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
         client.setCookieStore(myCookieStore);
         RequestParams params = new RequestParams();
-        params.put("MemID",  PreferenceHelper.readString(ac,"shoppay","memid",""));
+        params.put("MemID", PreferenceHelper.readString(ac, "shoppay", "memid", ""));
         params.put("OrderAccount", DateUtils.getCurrentTime("yyyyMMddHHmmss"));
-        params.put("GiftPoint",point);
-        params.put("GiftCount",jifenlist.size());
+        params.put("GiftPoint", point);
+        params.put("GiftCount", jifenlist.size());
         for (int i = 0; i < jifenlist.size(); i++) {
             params.put("GiftList[" + i + "][GiftID]", jifenlist.get(i).GiftID);
             params.put("GiftList[" + i + "][GiftExchangePoint]", jifenlist.get(i).GiftExchangePoint);
-            params.put("GiftList[" + i + "][ExcNumber]",  jifenlist.get(i).count);
+            params.put("GiftList[" + i + "][ExcNumber]", jifenlist.get(i).count);
         }
         LogUtils.d("xxparams", params.toString());
         String url = UrlTools.obtainUrl(ac, "?Source=3", "PointGiftExchange");
@@ -595,45 +601,45 @@ public class JifenDuihuanActivity extends Activity {
                     dialog.dismiss();
                     LogUtils.d("xxJiesuanS", new String(responseBody, "UTF-8"));
                     JSONObject jso = new JSONObject(new String(responseBody, "UTF-8"));
-                    if(jso.getInt("flag")==1){
+                    if (jso.getInt("flag") == 1) {
                         Toast.makeText(ac, jso.getString("msg"), Toast.LENGTH_LONG).show();
-                        JSONObject jsonObject=(JSONObject) jso.getJSONArray("print").get(0);
+                        JSONObject jsonObject = (JSONObject) jso.getJSONArray("print").get(0);
                         dbAdapter.deleteJifenShopCar();
-                        if(jsonObject.getInt("printNumber")==0){
+                        if (jsonObject.getInt("printNumber") == 0) {
                             finish();
-                        }else{
-                            BluetoothAdapter bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
-                            if(bluetoothAdapter.isEnabled()) {
+                        } else {
+                            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                            if (bluetoothAdapter.isEnabled()) {
                                 BluetoothUtil.connectBlueTooth(context);
-                                BluetoothUtil.sendData(DayinUtils.dayin(jsonObject.getString("printContent")),jsonObject.getInt("printNumber"));
+                                BluetoothUtil.sendData(DayinUtils.dayin(jsonObject.getString("printContent")), jsonObject.getInt("printNumber"));
                                 finish();
-                            }else {
-                               finish();
+                            } else {
+                                finish();
                             }
                         }
                     } else {
-                       isClick=true;
+                        isClick = true;
                         Toast.makeText(ac, jso.getString("msg"), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     dialog.dismiss();
-                    isClick=true;
-                    Toast.makeText(ac,"兑换失败",Toast.LENGTH_SHORT).show();
+                    isClick = true;
+                    Toast.makeText(ac, "兑换失败", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 dialog.dismiss();
-                isClick=true;
-                Toast.makeText(ac,"兑换失败",Toast.LENGTH_SHORT).show();
+                isClick = true;
+                Toast.makeText(ac, "兑换失败", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
 
-    private class  ShopChangeReceiver extends BroadcastReceiver {
+    private class ShopChangeReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -646,7 +652,7 @@ public class JifenDuihuanActivity extends Activity {
 
                 } else {
                     num = num + Integer.parseInt(shopCar.count);
-                    point = point +Integer.parseInt(CommonUtils.multiply(shopCar.GiftExchangePoint,shopCar.count));
+                    point = point + Integer.parseInt(CommonUtils.multiply(shopCar.GiftExchangePoint, shopCar.count));
                 }
             }
             tvAlljifen.setText(point + "");
@@ -654,10 +660,6 @@ public class JifenDuihuanActivity extends Activity {
 
         }
     }
-
-
-
-
 
 
     /**

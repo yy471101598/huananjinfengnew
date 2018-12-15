@@ -43,6 +43,7 @@ import com.shoppay.hnjf.tools.DayinUtils;
 import com.shoppay.hnjf.tools.DialogUtil;
 import com.shoppay.hnjf.tools.LogUtils;
 import com.shoppay.hnjf.tools.NoDoubleClickListener;
+import com.shoppay.hnjf.tools.NullUtils;
 import com.shoppay.hnjf.tools.PreferenceHelper;
 import com.shoppay.hnjf.tools.ToastUtils;
 import com.shoppay.hnjf.tools.UrlTools;
@@ -63,7 +64,7 @@ import cz.msebera.android.httpclient.Header;
 public class VipRechargeActivity extends Activity implements View.OnClickListener {
     private RelativeLayout rl_left, rl_rechage;
     private EditText et_vipcard, et_money;
-    private TextView tv_title, tv_vipname, tv_vipyue, tv_jifen, tv_dengji;
+    private TextView tv_title, tv_vipname, tv_vipyue, tv_jifen, tv_dengji,mVipTvKamcard;
     private MyGridViews myGridViews;
     TextView mVipTvCarcard;
     TextView mVipTvSfzcard;
@@ -91,6 +92,7 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
                     tv_dengji.setText(info.getLevelName());
                     mVipTvCarcard.setText(info.MemCarNumber);
                     mVipTvSfzcard.setText(info.MemIdentityCard);
+                    mVipTvKamcard.setText(NullUtils.noNullHandle(info.MemCardNumber).toString());
                     PreferenceHelper.write(ac, "shoppay", "memid", info.getMemID());
                     PreferenceHelper.write(ac, "shoppay", "vipcar", et_vipcard.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "Discount", info.getDiscount());
@@ -105,6 +107,7 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
                     tv_dengji.setText("");
                     mVipTvCarcard.setText("");
                     mVipTvSfzcard.setText("");
+                    mVipTvKamcard.setText("");
                     isSuccess = false;
                     PreferenceHelper.write(ac, "shoppay", "memid", "123");
                     PreferenceHelper.write(ac, "shoppay", "vipcar", "123");
@@ -314,6 +317,7 @@ public class VipRechargeActivity extends Activity implements View.OnClickListene
         et_zsmoney = findViewById(R.id.et_zsmoney);
         myGridViews = (MyGridViews) findViewById(R.id.gridview);
         mRadiogroup = (RadioGroup) findViewById(R.id.radiogroup);
+        mVipTvKamcard=findViewById(R.id.vip_tv_kamcard);
 
          mVipTvCarcard=findViewById(R.id.vip_tv_carcard);
          mVipTvSfzcard=findViewById(R.id.vip_tv_sfzcard);

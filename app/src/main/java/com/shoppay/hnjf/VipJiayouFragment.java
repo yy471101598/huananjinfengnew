@@ -49,6 +49,7 @@ import com.shoppay.hnjf.tools.DayinUtils;
 import com.shoppay.hnjf.tools.DialogUtil;
 import com.shoppay.hnjf.tools.LogUtils;
 import com.shoppay.hnjf.tools.NoDoubleClickListener;
+import com.shoppay.hnjf.tools.NullUtils;
 import com.shoppay.hnjf.tools.OilChoseDialog;
 import com.shoppay.hnjf.tools.PreferenceHelper;
 import com.shoppay.hnjf.tools.StringUtil;
@@ -72,7 +73,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class VipJiayouFragment extends Fragment {
     private EditText et_card, et_xfmoney, et_zfmoney, et_yuemoney, et_jfmoney;
-    private TextView tv_vipname, tv_vipjf, tv_maxdk, tv_dkmoney, tv_obtainjf, tv_vipyue, tv_jiesuan, tv_vipdengji, tv_vipcard, tv_oil, tv_carcard, tv_oiltype;
+    private TextView tv_vipname, tv_vipjf, tv_maxdk, tv_dkmoney, tv_obtainjf, tv_vipyue, tv_jiesuan,mVipTvKamcard, tv_vipdengji, tv_vipcard, tv_oil, tv_carcard, tv_oiltype;
     private RelativeLayout rl_jiesuan;
     private boolean isMoney = false, isYue = true, isZhifubao = false, isYinlian = false, isQita = false, isWx = false;
     private RelativeLayout rl_pay_money, rl_pay_yue, rl_pay_jifen, rl_pay_jifenmaxdk, rl_pay_jifendkm, rl_wx, rl_money, rl_oil;
@@ -105,6 +106,7 @@ public class VipJiayouFragment extends Fragment {
                     tv_oiltype.setText(info.MemIdentityCard);
                     tv_carcard.setText(info.MemCarNumber);
                     tv_vipcard.setText(info.getMemCard());
+                    mVipTvKamcard.setText(NullUtils.noNullHandle(info.MemCardNumber).toString());
                     PreferenceHelper.write(getActivity(), "shoppay", "memid", info.getMemID());
                     PreferenceHelper.write(getActivity(), "shoppay", "vipcar", et_card.getText().toString());
                     PreferenceHelper.write(getActivity(), "shoppay", "Discount", info.getDiscount());
@@ -120,6 +122,7 @@ public class VipJiayouFragment extends Fragment {
                     tv_vipdengji.setText("");
                     tv_oiltype.setText("");
                     tv_carcard.setText("");
+                    mVipTvKamcard.setText("");
                     break;
 
 
@@ -557,6 +560,7 @@ public class VipJiayouFragment extends Fragment {
         et_xfmoney = (EditText) view.findViewById(R.id.vip_et_xfmoney);
         et_zfmoney = (EditText) view.findViewById(R.id.vip_et_money);
         mRadiogroup = (RadioGroup) view.findViewById(R.id.radiogroup);
+        mVipTvKamcard=view.findViewById(R.id.vip_tv_kamcard);
         et_yuemoney = (EditText) view.findViewById(R.id.vip_et_yue);
         et_password = (EditText) view.findViewById(R.id.vip_et_password);
         et_jfmoney = (EditText) view.findViewById(R.id.vip_et_jifen);

@@ -45,6 +45,7 @@ public class VipInfo {
     public String MemCarNumber;//车牌号
     public String MemIdentityCard;//=身份证号
     public String FirstRegistTime;//=首次登记时间
+    public String MemCardNumber;
 
     public String getMemID() {
         return MemID;

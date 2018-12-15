@@ -32,6 +32,7 @@ import com.shoppay.hnjf.card.ReadCardOpt;
 import com.shoppay.hnjf.tools.ActivityStack;
 import com.shoppay.hnjf.tools.DialogUtil;
 import com.shoppay.hnjf.tools.LogUtils;
+import com.shoppay.hnjf.tools.NullUtils;
 import com.shoppay.hnjf.tools.PreferenceHelper;
 import com.shoppay.hnjf.tools.StringUtil;
 import com.shoppay.hnjf.tools.ToastUtils;
@@ -93,6 +94,8 @@ public class VipChaxunActivity extends Activity {
     TextView mVipTvCarcard;
     @Bind(R.id.vip_tv_sfzcard)
     TextView mVipTvSfzcard;
+    @Bind(R.id.vip_tv_kamcard)
+    TextView mVipTvKamcard;
     private boolean isSuccess = false;
     private Activity ac;
     private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
@@ -117,6 +120,7 @@ public class VipChaxunActivity extends Activity {
                     vipTvXiaofei.setText(StringUtil.twoNum(info.getMemConsumeMoney()));
                     mVipTvCarcard.setText(info.MemCarNumber);
                     mVipTvSfzcard.setText(info.MemIdentityCard);
+                    mVipTvKamcard.setText(NullUtils.noNullHandle(info.MemCardNumber).toString());
                     PreferenceHelper.write(ac, "shoppay", "memid", info.getMemID());
                     PreferenceHelper.write(ac, "shoppay", "vipcar", vipEtCard.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "Discount", info.getDiscount());
@@ -139,6 +143,7 @@ public class VipChaxunActivity extends Activity {
                     vipTvXiaofei.setText("");
                     mVipTvCarcard.setText("");
                     mVipTvSfzcard.setText("");
+                    mVipTvKamcard.setText("");
                     isSuccess = false;
                     PreferenceHelper.write(ac, "shoppay", "memid", "123");
                     PreferenceHelper.write(ac, "shoppay", "vipcar", "123");

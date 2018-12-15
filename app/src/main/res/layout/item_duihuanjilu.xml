@@ -24,6 +24,20 @@
     android:background="@color/viewcolor"
     ></View>
     <TextView
+        android:id="@+id/vip_tv_kamcard"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_30"
+        android:textSize="13sp"
+        android:gravity="center"
+        android:text="卡面号码"
+        />
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/viewcolor"
+        ></View>
+    <TextView
         android:id="@+id/tv_num"
         android:visibility="gone"
         android:layout_width="wrap_content"
@@ -43,7 +57,7 @@
         ></View>
     <TextView
         android:id="@+id/tv_jifen"
-        android:layout_width="100dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:textColor="@color/text_30"
         android:textSize="13sp"

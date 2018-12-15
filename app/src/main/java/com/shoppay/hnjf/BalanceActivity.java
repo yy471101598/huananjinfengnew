@@ -57,6 +57,7 @@ import com.shoppay.hnjf.tools.ESCUtil;
 import com.shoppay.hnjf.tools.LogUtils;
 import com.shoppay.hnjf.tools.MergeLinearArraysUtil;
 import com.shoppay.hnjf.tools.NoDoubleClickListener;
+import com.shoppay.hnjf.tools.NullUtils;
 import com.shoppay.hnjf.tools.PreferenceHelper;
 import com.shoppay.hnjf.tools.ShopXiaofeiDialog;
 import com.shoppay.hnjf.tools.StringUtil;
@@ -106,6 +107,7 @@ public class BalanceActivity extends FragmentActivity implements
     private Dialog jiesuanDialog;
     private VipPayMsg vipPayMsg;
     private EditText et_shopcode;
+    private TextView tv_kamcard;
     private RelativeLayout rl_right;
     private Boolean isSuccess = false;
     private Handler handler = new Handler() {
@@ -121,6 +123,7 @@ public class BalanceActivity extends FragmentActivity implements
                     tv_vipdengji.setText(info.getLevelName());
                     mVipTvCarcard.setText(info.MemCarNumber);
                     mVipTvSfzcard.setText(info.MemIdentityCard);
+                    tv_kamcard.setText(NullUtils.noNullHandle(info.MemCardNumber).toString());
                     PreferenceHelper.write(ac, "shoppay", "vipcar", et_card.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "vipname", tv_vipname.getText().toString());
                     PreferenceHelper.write(ac, "shoppay", "memid", info.getMemID());
@@ -135,6 +138,7 @@ public class BalanceActivity extends FragmentActivity implements
                     tv_vipdengji.setText("");
                     mVipTvCarcard.setText("");
                     mVipTvSfzcard.setText("");
+                    tv_kamcard.setText("");
                     isSuccess = false;
                     break;
                 case 3:
@@ -423,6 +427,7 @@ public class BalanceActivity extends FragmentActivity implements
         rl_no = (RelativeLayout) findViewById(R.id.rl_no);
         rl_left = (RelativeLayout) findViewById(R.id.rl_left);
         rl_right = (RelativeLayout) findViewById(R.id.rl_right);
+        tv_kamcard=findViewById(R.id.vip_tv_kamcard);
         rl_card = (RelativeLayout) findViewById(R.id.balance_rl_card);
         rl_vipjifen = (RelativeLayout) findViewById(R.id.balance_rl_vipjifen);
         rl_vipname = (RelativeLayout) findViewById(R.id.balance_rl_vipname);
