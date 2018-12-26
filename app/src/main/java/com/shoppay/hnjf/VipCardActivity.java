@@ -428,7 +428,7 @@ public class VipCardActivity extends Activity implements View.OnClickListener {
         if (et_sfzcard.getText().toString().equals("") || et_sfzcard.getText().toString() == null) {
             map.put("MemIdentityCard", "");
         } else {
-            map.put("MemIdentityCard", et_carcard.getText().toString());
+            map.put("MemIdentityCard", et_sfzcard.getText().toString());
         }
         if (tv_vipsr.getText().toString().equals("年-月-日")) {
             map.put("MemBirthday", "");
