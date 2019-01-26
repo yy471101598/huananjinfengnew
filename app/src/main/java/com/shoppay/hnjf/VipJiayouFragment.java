@@ -786,9 +786,8 @@ public class VipJiayouFragment extends Fragment {
         rl_jiesuan.setOnClickListener(new NoDoubleClickListener() {
             @Override
             protected void onNoDoubleClick(View view) {
-                if (et_card.getText().toString().equals("")
-                        || et_card.getText().toString() == null) {
-                    Toast.makeText(MyApplication.context, "请输入会员卡号",
+                if (!isSuccess) {
+                    Toast.makeText(MyApplication.context, "请输入正确的会员卡号",
                             Toast.LENGTH_SHORT).show();
                 } else if (et_xfmoney.getText().toString().equals("")
                         || et_xfmoney.getText().toString() == null) {

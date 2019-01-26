@@ -344,7 +344,7 @@ public class NumRechargeActivity extends Activity implements
                             Toast.LENGTH_SHORT).show();
                 } else {
                     if (CommonUtils.checkNet(getApplicationContext())) {
-                        if (et_card.getText().toString().equals("") || et_card.getText().toString() == null) {
+                        if (!isSuccess) {
                             Toast.makeText(ac, "请输入会员卡号", Toast.LENGTH_SHORT).show();
                         } else {
                             jiesuanDialog = NumRechargeDialog.jiesuanDialog(app, dialog, NumRechargeActivity.this, 1, "num", Double.parseDouble(tv_money.getText().toString()), new InterfaceBack() {
