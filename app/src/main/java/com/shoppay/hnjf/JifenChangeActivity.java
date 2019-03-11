@@ -332,7 +332,7 @@ public class JifenChangeActivity extends Activity {
                                 jifenChange();
                             }
                         } else {
-                            if (Integer.parseInt(vipTvJifen.getText().toString()) > Integer.parseInt(vipEtJifennum.getText().toString())) {
+                            if (Integer.parseInt(vipTvJifen.getText().toString()) >= Integer.parseInt(vipEtJifennum.getText().toString())) {
                                 if (isClick) {
                                     jifenChange();
                                 }
